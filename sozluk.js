@@ -1,3 +1,5 @@
+alert("GITHUB JS ÇALIŞIYOR");
+
 document.addEventListener("DOMContentLoaded", function () {
 
     var sozluk = {
