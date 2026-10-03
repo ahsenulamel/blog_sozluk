@@ -1,70 +1,119 @@
+document.addEventListener("DOMContentLoaded", function () {
 
-(function () {
-  "use strict";
+    console.log("Sözlük sistemi başlatılıyor...");
 
-  var SOZLUK_JSON_URL =
-    "https://kullanici.github.io/sozluk/sozluk.json";
+    /* ----------------------------- JSON SÖZLÜĞÜ ----------------------------- */
 
-  // Sözlük verilerini dış dosyadan yükle
-  fetch(SOZLUK_JSON_URL)
-    .then(function (response) {
-      if (!response.ok) {
-        throw new Error("Sözlük yüklenemedi.");
-      }
-      return response.json();
-    })
-    .then(function (sozluk) {
-      var kutu = document.createElement("div");
-      kutu.id = "dic-popup";
+    var SOZLUK_URL =
+        "https://raw.githubusercontent.com/KULLANICI_ADIN/blog-sozluk/main/sozluk.json";
 
-      kutu.style.cssText =
-        "display:none;position:fixed;z-index:99999;" +
-        "max-width:320px;padding:10px 14px;" +
-        "background:#222;color:#fff;border-radius:6px;" +
-        "font-size:14px;line-height:1.6;" +
-        "pointer-events:none;";
+    var sozluk = {};
 
-      document.body.appendChild(kutu);
+    fetch(SOZLUK_URL)
+        .then(function (response) {
 
-      document.addEventListener("mouseover", function (event) {
+            if (!response.ok) {
+                throw new Error("Sözlük dosyası yüklenemedi: " + response.status);
+            }
+
+            return response.json();
+
+        })
+        .then(function (veri) {
+
+            sozluk = veri;
+
+            console.log("Sözlük yüklendi:", sozluk);
+
+        })
+        .catch(function (hata) {
+
+            console.error("Sözlük yüklenirken hata oluştu:", hata);
+
+        });
+
+
+    /* ----------------------------- AÇIKLAMA KUTUSU ----------------------------- */
+
+    var kutu = document.createElement("div");
+
+    kutu.id = "dic-popup";
+
+    document.body.appendChild(kutu);
+
+
+    /* ----------------------------- FARE HAREKETİ ----------------------------- */
+
+    document.addEventListener("mouseover", function (event) {
+
         var hedef = event.target.closest("dic");
-        if (!hedef) return;
 
-        var kelime = hedef.textContent
-          .trim()
-          .toLocaleLowerCase("tr-TR");
+        if (!hedef) {
+            return;
+        }
+
+        var kelime = hedef.textContent.trim();
+
+        console.log("Üzerine gelindi:", kelime);
 
         if (!sozluk[kelime]) {
-          kutu.style.display = "none";
-          return;
+
+            console.log("Sözlükte bulunamadı:", kelime);
+
+            kutu.style.display = "none";
+
+            return;
         }
 
         kutu.textContent = sozluk[kelime];
+
         kutu.style.display = "block";
+
+
+        /* ----------------------------- KONUMLANDIRMA ----------------------------- */
 
         var x = event.clientX + 12;
         var y = event.clientY + 15;
 
-        var rect = kutu.getBoundingClientRect();
+        var w = kutu.offsetWidth;
+        var h = kutu.offsetHeight;
 
-        if (x + rect.width > window.innerWidth - 10) {
-          x = window.innerWidth - rect.width - 10;
+
+        if (x + w > window.innerWidth - 10) {
+
+            x = window.innerWidth - w - 10;
+
         }
 
-        if (y + rect.height > window.innerHeight - 10) {
-          y = event.clientY - rect.height - 15;
+
+        if (y + h > window.innerHeight - 10) {
+
+            y = event.clientY - h - 15;
+
         }
 
-        kutu.style.left = Math.max(5, x) + "px";
-        kutu.style.top = Math.max(5, y) + "px";
-      });
 
-      document.addEventListener("mouseout", function (event) {
-        var hedef = event.target.closest("dic");
-        if (hedef) kutu.style.display = "none";
-      });
-    })
-    .catch(function (error) {
-      console.error("Sözlük sistemi:", error);
+        kutu.style.left = x + "px";
+        kutu.style.top = y + "px";
+
     });
-})();
+
+
+    /* ----------------------------- FARE KELİMEDEN AYRILDI ----------------------------- */
+
+    document.addEventListener("mouseout", function (event) {
+
+        var hedef = event.target.closest("dic");
+
+        if (!hedef) {
+            return;
+        }
+
+        kutu.style.display = "none";
+
+    });
+
+
+    console.log("Sözlük sistemi hazır.");
+
+});
