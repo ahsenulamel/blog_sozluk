@@ -13,7 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(function (response) {
 
             if (!response.ok) {
-                throw new Error("Sözlük dosyası yüklenemedi: " + response.status);
+                throw new Error(
+                    "Sözlük dosyası yüklenemedi: " + response.status
+                );
             }
 
             return response.json();
@@ -80,16 +82,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (x + w > window.innerWidth - 10) {
-
             x = window.innerWidth - w - 10;
-
         }
 
 
         if (y + h > window.innerHeight - 10) {
-
             y = event.clientY - h - 15;
-
         }
 
 
