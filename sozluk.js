@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------- JSON SÖZLÜĞÜ ----------------------------- */
 
     var SOZLUK_URL =
-        "https://raw.githubusercontent.com/KULLANICI_ADIN/blog-sozluk/main/sozluk.json";
+        "https://raw.githubusercontent.com/ahsenulamel/blog_sozluk/refs/heads/main/sozluk.json";
 
     var sozluk = {};
 
